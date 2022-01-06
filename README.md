@@ -1,6 +1,8 @@
 # Sinology Compatibility Hack
 It's a hack to disable the compatibilty check of some synology devices
 
+It's tested with Version DSM 7.0.1-42218 on a RS2821rp+ NAS.
+
 ## HowTo
 
 In my Example i'm using windows with putty and scp.
