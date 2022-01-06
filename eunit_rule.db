@@ -1,0 +1,64 @@
+{
+  "rules": [
+    {
+      "property": {
+        "positive": {
+          "compatibility": "not_support"
+        },
+        "negative": {}
+      },
+      "actions": {
+        "discard_from_web": false,
+        "notification": false,
+        "selectable": true,
+        "alert": false,
+        "ui_compatibility": "not_support"
+      }
+    },
+    {
+      "property": {
+        "positive": {
+          "host_compatibility": "not_support"
+        },
+        "negative": {}
+      },
+      "actions": {
+        "discard_from_web": false,
+        "notification": false,
+        "selectable": true,
+        "alert": false,
+        "ui_compatibility": "not_support"
+      }
+    },
+    {
+      "property": {
+        "positive": {
+          "host_compatibility": "not_in_support"
+        },
+        "negative": {}
+      },
+      "actions": {
+        "discard_from_web": false,
+        "notification": false,
+        "selectable": true,
+        "alert": false,
+        "ui_compatibility": "not_in_support"
+      }
+    },
+    {
+      "property": {
+        "positive": {
+          "host_compatibility": "support"
+        },
+        "negative": {}
+      },
+      "actions": {
+        "discard_from_web": false,
+        "notification": false,
+        "selectable": true,
+        "alert": false,
+        "ui_compatibility": "support"
+      }
+    }
+  ]
+}
