@@ -12,7 +12,7 @@ Change YOURSYNOLOGYIP to the ip of your Synology Device like 192.168.123.123.
 2. Login via SSh in your Synology Device
 3. cd /var/lib/disk-compatibility
 4. make a copy of the directory on your local hard drive for backup purposes  
-   example: ```scp admin@YOURSYNOLOGYIP:/var/lib/disk-compatibility c:\temp```
+   example: ```scp admin@YOURSYNOLOGYIP:/var/lib/disk-compatibility/*.* c:\temp```
 5. change the filename of my rs2821rp+_host_v7.db to your device model
 6. Inside the file change "MZ7LH1T9HMLT-00005" to your Harddrives model and change "HXT7904Q" to your Harddrives firmware. Save afterwards
 7. copy the file via scp to /tmp on your Synology Device  
