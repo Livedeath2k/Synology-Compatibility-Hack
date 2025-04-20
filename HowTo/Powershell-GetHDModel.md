@@ -14,11 +14,9 @@ This script connects to a Synology NAS via SSH, retrieves the model numbers of i
     * Note the port number if it's not the default (`22`). This script assumes port `22`.
 * **NAS Credentials:** You need the username and password for an account on the Synology NAS that belongs to the `administrators` group.
 
-## 1. Save the Script
+## 1. Download the Script
 
-* Copy the entire PowerShell script code.
-* Paste it into a plain text editor (like Notepad, VS Code, etc.).
-* **Save** the file with a `.ps1` extension, for example, `Get-SynologyDiskModels.ps1`.
+* Download the [script](./PowerShell/Get-SynologyDiskModels.ps1)
 
 ## 2. Set PowerShell Execution Policy (One-time Setup, if needed)
 
