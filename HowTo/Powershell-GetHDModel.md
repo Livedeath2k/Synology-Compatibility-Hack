@@ -16,7 +16,7 @@ This script connects to a Synology NAS via SSH, retrieves the model numbers of i
 
 ## 1. Download the Script
 
-* Download the [script](./PowerShell/Get-SynologyDiskModels.ps1)
+* Download the [script](https://github.com/Livedeath2k/Synology-Compatibility-Hack/PowerShell/Get-SynologyDiskModels.ps1)
 
 ## 2. Set PowerShell Execution Policy (One-time Setup, if needed)
 
