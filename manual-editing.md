@@ -1,6 +1,5 @@
-# Synology Compatibility Hack
-It's a hack to disable the compatibilty check of some synology devices
-
+# Manual Approach of the Synology Compatibility Hack
+It's a hack to disable the compatibilty check of some synology devices.
 It's tested with Version DSM 7.0.1-42218 on a RS2821rp+ NAS.
 
 ## HowTo
@@ -14,7 +13,7 @@ Change YOURSYNOLOGYIP to the ip of your Synology Device like 192.168.123.123.
 4. make a copy of the directory on your local hard drive for backup purposes  
    example: ```scp admin@YOURSYNOLOGYIP:/var/lib/disk-compatibility/*.* c:\temp```
 5. change the filename of my rs2821rp+_host_v7.db to your device model
-6. Inside the file change "MZ7LH1T9HMLT-00005" to your Harddrives model and change "HXT7904Q" to your Harddrives firmware. Save afterwards
+6. Inside the file change "MZ7LH1T9HMLT-00005" to your Harddrive model and change "HXT7904Q" to your Harddrive firmware. Change the Model of the NAS Model in "nas_model":"rs2821rp+" to your NAS. Save afterwards.
 7. copy the file via scp to /tmp on your Synology Device  
    example: ```scp c:\temp\rs2821rp+_host_v7.db admin@YOURSYNOLOGYIP:/tmp/rs2821rp+_host_v7.db```
 8. overwrite the existing file via sudo cp  
