@@ -1,4 +1,4 @@
-# How to Use the Get-SynologyDiskModels PowerShell Script
+# How to Use the Get-SynologyData PowerShell Script
 
 This script connects to a Synology NAS via SSH, retrieves the model numbers of installed hard drives, and saves the list to `C:\Temp\Listing.txt` on your Windows machine.
 
@@ -16,7 +16,7 @@ This script connects to a Synology NAS via SSH, retrieves the model numbers of i
 
 ## 1. Download the Script
 
-* Download the [script](/PowerShell/Get-SynologyDiskModels.ps1)
+* Download the [script](/PowerShell/Get-SynologyData.ps1)
 
 ## 2. Set PowerShell Execution Policy (One-time Setup, if needed)
 
@@ -41,18 +41,18 @@ PowerShell's security settings might prevent running local scripts by default. Y
 3.  Execute the script using `.\` followed by the script name and provide the necessary parameters: `-NasUser` and `-NasHost`. Replace the placeholder values.
 
     ```powershell
-    .\Get-SynologyDiskModels.ps1 -NasUser "YOUR_NAS_USERNAME" -NasHost "YOUR_NAS_IP_OR_HOSTNAME"
+    .\Get-SynologyData.ps1 -NasUser "YOUR_NAS_USERNAME" -NasHost "YOUR_NAS_IP_OR_HOSTNAME"
     ```
 
     **Examples:**
 
     * Using IP Address:
         ```powershell
-        .\Get-SynologyDiskModels.ps1 -NasUser "admin" -NasHost "192.168.1.100"
+        .\Get-SynologyData.ps1 -NasUser "admin" -NasHost "192.168.1.100"
         ```
     * Using Hostname:
         ```powershell
-        .\Get-SynologyDiskModels.ps1 -NasUser "myadmin" -NasHost "diskstation.local"
+        .\Get-SynologyData.ps1 -NasUser "myadmin" -NasHost "diskstation.local"
         ```
 
 ## 4. Enter Password
@@ -64,7 +64,7 @@ PowerShell's security settings might prevent running local scripts by default. Y
 ## 5. Check the Result
 
 * If the script runs successfully, it will print completion messages in the PowerShell window.
-* The output containing the list of disk drives and their model numbers will be saved to:
+* The output containing the list of disk drives, their model numbers and the database file will be saved to:
     `C:\Temp\Listing.txt`
 * The script automatically creates the `C:\Temp` directory if it doesn't exist.
 * If errors occur (e.g., connection failed, wrong password, SSH disabled), error messages or warnings will be displayed in the PowerShell window. Review these messages to troubleshoot the issue.
