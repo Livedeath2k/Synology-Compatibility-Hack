@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synology Compatibility List Editor</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        label { display: block; margin-top: 10px; }
+        input[type="text"], input[type="number"], input[type="file"] { width: 300px; padding: 5px; margin-bottom: 10px; }
+        button { margin-top: 15px; padding: 8px 15px; cursor: pointer; }
+        button:disabled { cursor: not-allowed; opacity: 0.6; }
+        pre { background-color: #f0f0f0; padding: 15px; border: 1px solid #ccc; white-space: pre-wrap; word-wrap: break-word; max-height: 400px; overflow-y: auto;}
+        .optional-section { border-left: 3px solid #007bff; padding-left: 10px; margin-top: 10px; }
+        #status { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>Synology Compatibility List Editor</h1>
+
+    <div>
+        <label for="fileInput">1. Upload a compatibility file (.json, .db or .txt):</label>
+        <input type="file" id="fileInput" accept=".json,.txt,.db">
+    </div>
+
+    <div id="editorSection" style="display: none;">
+        <h2>2. Add a new drive model:</h2>
+        <form id="addDriveForm">
+            <label for="diskModel">Drive Model (exact name):</label>
+            <input type="text" id="diskModel" name="diskModel" required>
+
+            <div class="optional-section">
+                 <h4>Optional: Add Specific Firmware</h4>
+                 <label for="firmwareVersion">Firmware Version:</label>
+                 <input type="text" id="firmwareVersion" name="firmwareVersion">
+
+                 <label for="firmwareBin">Firmware Binary File (.bin/.ftd):</label>
+                 <input type="text" id="firmwareBin" name="firmwareBin">
+
+                 <label for="firmwareBuild">Firmware Build Number:</label>
+                 <input type="number" id="firmwareBuild" name="firmwareBuild">
+            </div>
+
+            <button type="submit" id="addDriveButton">Add Model to List</button>
+        </form>
+
+        <h2>3. Modified Compatibility Data:</h2>
+        <pre id="outputJson"></pre>
+        <button id="downloadButton">Download Modified File</button>
+    </div>
+
+    <div id="status">No file loaded.</div>
+
+    <script>
+        let currentCompatibilityData = null;
+        let originalFileName = 'compatibility_modified.json'; // Default filename in English
+
+        const fileInputElement = document.getElementById('fileInput');
+        const editorSectionElement = document.getElementById('editorSection');
+        const outputElement = document.getElementById('outputJson');
+        const form = document.getElementById('addDriveForm');
+        const downloadButton = document.getElementById('downloadButton');
+        const addDriveButton = document.getElementById('addDriveButton');
+        const statusElement = document.getElementById('status');
+
+        // Initial state: Editor and Download disabled
+        editorSectionElement.style.display = 'none';
+        downloadButton.disabled = true;
+        addDriveButton.disabled = true;
+
+
+        // --- File Upload Handler ---
+        fileInputElement.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                statusElement.textContent = 'No file selected.';
+                return;
+            }
+
+            // Prepare filename for download (replace extension part with _modified.<ext>)
+            originalFileName = file.name.replace(/(\.json|\.txt)$/i, '_modified$1') || 'compatibility_modified.json';
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    currentCompatibilityData = JSON.parse(content);
+
+                    // Validate structure (optional but recommended)
+                    if (!currentCompatibilityData || typeof currentCompatibilityData.disk_compatbility_info !== 'object' || typeof currentCompatibilityData.nas_model !== 'string') {
+                        throw new Error("Invalid file structure. 'disk_compatbility_info' or 'nas_model' key is missing.");
+                    }
+
+                    statusElement.textContent = `File '${file.name}' loaded successfully (Model: ${currentCompatibilityData.nas_model}). Ready for editing.`;
+                    displayJson();
+                    editorSectionElement.style.display = 'block'; // Show editor
+                    downloadButton.disabled = false;
+                    addDriveButton.disabled = false;
+
+                } catch (error) {
+                    currentCompatibilityData = null;
+                    editorSectionElement.style.display = 'none'; // Hide editor
+                    downloadButton.disabled = true;
+                    addDriveButton.disabled = true;
+                    outputElement.textContent = ''; // Clear display
+                    statusElement.textContent = `Error reading or parsing the file: ${error.message}`;
+                    alert(`Error: Could not read the file as valid JSON with the expected structure.\n${error.message}`);
+                }
+            };
+
+            reader.onerror = function() {
+                statusElement.textContent = 'Error reading the file.';
+                alert('An error occurred while reading the file.');
+                currentCompatibilityData = null;
+                editorSectionElement.style.display = 'none';
+                downloadButton.disabled = true;
+                addDriveButton.disabled = true;
+                outputElement.textContent = '';
+            };
+
+            reader.readAsText(file); // Read file as text
+        });
+
+
+        // --- Function to display JSON data ---
+        function displayJson() {
+            if (currentCompatibilityData) {
+                outputElement.textContent = JSON.stringify(currentCompatibilityData, null, 2); // Formatted output
+            } else {
+                outputElement.textContent = '';
+            }
+        }
+
+        // --- Handler for adding a drive ---
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            if (!currentCompatibilityData) {
+                alert("Please load a file first.");
+                return;
+            }
+
+            const diskModel = document.getElementById('diskModel').value.trim();
+            const firmwareVersion = document.getElementById('firmwareVersion').value.trim();
+            const firmwareBin = document.getElementById('firmwareBin').value.trim();
+            const firmwareBuild = document.getElementById('firmwareBuild').value.trim();
+
+            if (!diskModel) {
+                alert("Please enter a drive model name.");
+                return;
+            }
+
+            // Ensure the main info object exists
+            if (!currentCompatibilityData.disk_compatbility_info) {
+                 currentCompatibilityData.disk_compatbility_info = {};
+            }
+            // Get or create the object for the specific drive model
+            let modelEntry = currentCompatibilityData.disk_compatbility_info[diskModel];
+            if (!modelEntry) {
+                 modelEntry = {};
+                 currentCompatibilityData.disk_compatbility_info[diskModel] = modelEntry;
+            }
+
+             // Always add or overwrite the default support entry
+             modelEntry["default"] = {
+                 "compatibility_interval": [{"compatibility": "support"}]
+             };
+
+
+            // Add the specific firmware entry if provided
+            if (firmwareVersion) {
+                let specificEntry = {
+                    "compatibility_interval": [{"compatibility": "support"}]
+                };
+                if (firmwareBin) {
+                    specificEntry.firm_bin = firmwareBin;
+                }
+                if (firmwareBuild) {
+                    const buildNum = parseInt(firmwareBuild, 10);
+                    if (!isNaN(buildNum)) {
+                        specificEntry.fw_buildnumber = buildNum;
+                    }
+                }
+                modelEntry[firmwareVersion] = specificEntry; // Add or overwrite
+            }
+
+
+            // Update display
+            displayJson();
+            statusElement.textContent = `Model '${diskModel}' was added/updated in the list.`;
+            // Optional: Clear form fields
+            // form.reset();
+        });
+
+
+        // --- Download Handler ---
+        downloadButton.addEventListener('click', function() {
+            if (!currentCompatibilityData) {
+                alert("No data available for download. Please load a file first.");
+                return;
+            }
+
+            try {
+                const jsonString = JSON.stringify(currentCompatibilityData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' }); // Or text/plain
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = originalFileName || 'compatibility_modified.json'; // Use modified or default name
+                document.body.appendChild(a); // Required for Firefox
+                a.click();
+
+                // Clean up
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                statusElement.textContent = `File '${a.download}' prepared for download.`;
+
+            } catch (error) {
+                 statusElement.textContent = `Error creating the download file: ${error.message}`;
+                 alert(`Error creating the download file: ${error.message}`);
+            }
+        });
+
+    </script>
+
+</body>
+</html>
