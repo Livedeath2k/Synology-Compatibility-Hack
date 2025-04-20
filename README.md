@@ -5,7 +5,7 @@ If you're a lazy guy, uses Windows 10 or Windows 11, you can use the [Powershell
 Run it in the powershell window with .\Update-SynologyDbAuto.ps1 -NasUser YourAdminUser -NasHost YourNASIp  
   
 If you're a lazy guy, uses Linux, you can use the [Bash script](Bash/update_syno_db_auto.sh)  
-The instruction can you find here 
+The instruction can you find [here](/HowTo/Bash-AutoupdateNASDB.md)  
   
 If you want the step by step approach, use the [instructions](HowTo/StepSynCompHack.md)  
 If you want it the old way, uses Windows, use the [instructions](HowTo/manual-editing.md)  
