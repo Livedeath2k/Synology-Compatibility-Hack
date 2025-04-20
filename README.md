@@ -10,3 +10,6 @@ The instruction can you find [here](/HowTo/Bash-AutoupdateNASDB.md)
   
 If you want the step by step approach, use the [instructions](HowTo/StepSynCompHack.md)  
 If you want it the old way, uses Windows, use the [instructions](HowTo/manual-editing.md)  
+
+If you like to buy me a Coffee, can you send it to me via Paypal.  
+[paypal.me/larsboos](https://paypal.me/larsboos)
